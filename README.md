@@ -1,25 +1,33 @@
 # Slitherlink AI Solver
 
-This repository contains a comprehensive, Python-based Artificial Intelligence solver for the classic Slitherlink logic puzzle[cite: 6]. 
+A comprehensive Python-based Artificial Intelligence solver for the classic Slitherlink logic puzzle. This project utilizes state-space search algorithms combined with rigorous constraint propagation to efficiently find solutions to puzzles of varying difficulties.
 
-## Extensive Project Description
+## How the Code Works
 
-The Slitherlink AI Solver models the puzzle as a complex state-space search problem[cite: 6]. To navigate this space efficiently, the solver relies heavily on AI search tree algorithms, predominantly utilizing Depth-First Search (DFS) and Greedy Search methods, while also supporting A*, Breadth-First Search (BFS), and Recursive Best-First Search (RBFS)[cite: 6]. 
+Solving Slitherlink using brute force generates an exponentially large search tree. To overcome this, the solver pairs AI search algorithms (like Depth-First Search and Greedy Search) with a Constraint Satisfaction system to heavily prune the tree[cite: 6, 9]. 
 
-Because a brute-force approach to Slitherlink results in an exponentially large search tree, this project heavily integrates constraint satisfaction techniques[cite: 7, 9]. The AI utilizes a SAT (Boolean Satisfiability) Oracle and Constraint Propagator to continuously evaluate the board[cite: 9]. By applying methods like Forward Checking and Arc Consistency (AC-3), the solver logically deduces mandatory and forbidden edges in real-time[cite: 7]. This dynamic pruning creates a "cascade effect" that drastically reduces the number of nodes the search tree algorithms must explore, allowing the AI to solve complex puzzles efficiently[cite: 9].
+Here is the step-by-step breakdown of the execution pipeline:
 
-## Project Architecture
+1. **Initial Propagation (Static Rules):** Before the search tree is even built, the `InitialPropagator` scans the board for known static patterns[cite: 7]. For example, a `0` cell automatically forbids all surrounding edges, while adjacent `3` cells force specific edges to be drawn[cite: 7]. This solves trivial parts of the puzzle immediately.
+2. **State-Space Search:** The core of the solver uses algorithms like DFS or Greedy Search to explore possible moves[cite: 6]. At each step, it looks for "loose ends" (vertices with exactly one connected edge) and attempts to draw the next valid line[cite: 6].
+3. **Constraint Propagation (The SAT Oracle):** Every time an edge is drawn, the `ConstraintPropagator` steps in[cite: 9]. It checks the local constraints of the affected cells (ensuring they don't exceed their target number) and vertices (ensuring no vertex has more than 2 edges, avoiding intersections)[cite: 9]. If a move forces another edge to be drawn or forbidden, the propagator applies it in a cascade[cite: 9]. If a rule is broken or a premature loop is closed, the state is marked invalid, and the search algorithm backtracks[cite: 9].
+4. **Heuristic Guidance:** For informed algorithms like Greedy Search, a custom heuristic evaluates how close the board is to a solution[cite: 6]. It calculates the number of missing edges and uses Manhattan distance to encourage the AI to connect existing loose ends rather than starting new, fragmented line segments[cite: 6].
 
-*   **`slitherlink.py`**: The core file defining the `SlitherlinkState` and `Board` classes, managing the state transitions, action validations, and goal testing[cite: 6]. It also includes the heuristic functions used to guide the greedy and A* searches[cite: 6].
-*   **`SATOracle.py`**: Houses the `ConstraintPropagator` class, which dynamically applies local constraints to vertices and cells during the search to prevent illegal moves and premature loops[cite: 9].
-*   **`initial_propagator.py`**: Executes static pattern recognition (e.g., adjacent 3s, diagonal 3s, or corner constraints) to solve trivial parts of the board before the main search tree is even initialized[cite: 7].
-*   **`utils.py`**: Provides foundational statistical operations, sequence manipulations, and data structures (like Priority Queues) necessary to support the broader AI algorithms[cite: 8].
+## Project Structure
 
-## Usage Examples
+*   `slitherlink.py`: The main execution script containing the `Board` state definition, transition models, goal testing, and search heuristics[cite: 6].
+*   `SATOracle.py`: Contains the `ConstraintPropagator` to enforce Slitherlink vertex and cell rules dynamically[cite: 9].
+*   `initial_propagator.py`: Implements static pattern recognition for the initial board state[cite: 7].
+*   `search.py`: Houses the core AI search algorithms (DFS, BFS, A*, Greedy, RBFS)[cite: 6].
+*   `utils.py`: Provides foundational data structures, mathematical operations, and sequence manipulations[cite: 8].
 
-The solver is designed to read puzzle configurations from standard input. Below are three primary ways to execute the code:
+## Usage & Examples
 
-**1. Standard Solver Execution:**
-You can pipe a text-based puzzle directly into the main script from the command line:
+The solver reads puzzle configurations from standard input (`stdin`). You can run the solver using the following commands depending on what you want to achieve:
+
+**1. Standard Solver Execution**
+Run the main solver script by piping in a puzzle text file:
 ```bash
-python3 slitherlink.py < tests/test01.txt
+python3 slitherlink.py < tests/test01.
+python3 slitherlink_gui.py
+python3 example1.py < "../tests/test03.txt"
