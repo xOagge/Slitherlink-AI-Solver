@@ -140,7 +140,7 @@ def main():
     BASE_SEED = 42
 
     for i in TESTS:
-        filename = f"test{i:02d}.txt"
+        filename = f"tests/test{i:02d}.txt"
         if not os.path.exists(filename):
             print(f"\n[SKIP] {filename} not found")
             continue

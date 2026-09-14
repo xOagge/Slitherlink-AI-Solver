@@ -11,8 +11,8 @@ import random, copy
 from sys import stdin
 from collections import defaultdict
 
-import utils
-from utils import *
+import build.utils as utils
+from build.utils import *
 
 from search import (
     Problem,
@@ -101,7 +101,7 @@ class Board:
         e retorna uma instância da classe Board.
 
         Por exemplo:
-            $ python3 pipe.py < test-01.txt
+            $ python3 pipe.py < tests/test-01.txt
 
             > from sys import stdin
             > line = stdin.readline().split()
@@ -473,8 +473,8 @@ class Slitherlink(Problem):
         """O construtor especifica o estado inicial."""
 
         #local import para nao criar circularidade de imports
-        from initial_propagator import InitialPropagator
-        from SATOracle import ConstraintPropagator
+        from build.initial_propagator import InitialPropagator
+        from build.SATOracle import ConstraintPropagator
 
         self.gui = gui
         
@@ -540,7 +540,7 @@ class Slitherlink(Problem):
         """efetua o rank das actions aceitaveis para uma board, usando a heuristica
         definida que valoriza preencher celulas, desenhar e proibir edges, diminuir
         o numero de loose edges, criacao de loops."""
-        from SATOracle import ConstraintPropagator
+        from build.SATOracle import ConstraintPropagator
 
         board = state.board
 
@@ -660,7 +660,7 @@ class Slitherlink(Problem):
         """adiciona uma action que foi selecionada em actions, e faz a
         constrains propagation"""
 
-        from SATOracle import ConstraintPropagator
+        from build.SATOracle import ConstraintPropagator
 
         is_single = isinstance(action, tuple) and isinstance(action[0], str)
 

@@ -353,8 +353,8 @@ def _parse_board_file(path: str) -> list[list[int]]:
 
 def main():
     base = os.path.dirname(os.path.abspath(__file__))
-    board_path = os.path.join(base, "slitherlink-boards-public", "test01.txt")
-    sol_path   = os.path.join(base, "slitherlink-boards-public", "test01.out")
+    board_path = os.path.join(base, "slitherlink-boards-public", "test03.txt")
+    sol_path   = os.path.join(base, "slitherlink-boards-public", "test03.out")
 
     # Fallback default board (matches test01.txt)
     board_grid = [

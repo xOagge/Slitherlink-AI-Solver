@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0, '../')
 from slitherlink import *
 
 #Ler grelhadafigura 1a:
